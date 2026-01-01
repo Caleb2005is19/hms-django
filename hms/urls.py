@@ -1,23 +1,28 @@
-"""
-URL configuration for hms project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+# hms/urls.py
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from django.contrib.auth import views as auth_views
+from accounts import views as account_views
+from dashboard import views as dashboard_views
+from appointments import views as appointment_views
+from prescriptions import views as rx_views
+from billing import views as billing_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('nurses/', include('nurses.urls')),
+    
+    # Auth URLs
+    path('register/', account_views.register, name='register'),
+    path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('logout/', account_views.logout_view, name='logout'),
+    path('book-appointment/', appointment_views.book_appointment, name='book_appointment'),
+    path('update-appt/<int:appointment_id>/<str:new_status>/', appointment_views.update_status, name='update_status'),
+    path('prescribe/<int:appointment_id>/', rx_views.add_prescription, name='add_prescription'),
+    path('prescription/view/<int:appointment_id>/', rx_views.view_prescription, name='view_prescription'),
+    path('billing/generate/<int:appointment_id>/', billing_views.generate_invoice, name='generate_invoice'),
+    path('billing/pay/<int:invoice_id>/', billing_views.pay_invoice, name='pay_invoice'),
+
+
+    # Dashboard
+    path('', dashboard_views.index, name='dashboard'),
 ]

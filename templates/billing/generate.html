@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h4>💰 Generate Invoice</h4>
+                <small>For Patient: {{ appt.patient.user.first_name }}</small>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="fw-bold">Services / Items</label>
+                        {{ form.item_list }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold">Total Amount (Ksh)</label>
+                        {{ form.total_amount }}
+                    </div>
+                    <button type="submit" class="btn btn-warning w-100">Emit Invoice</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

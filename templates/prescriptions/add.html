@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h4>💊 Write Prescription</h4>
+                <small>Patient: {{ appt.patient.user.first_name }} {{ appt.patient.user.last_name }}</small>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold">Symptoms</label>
+                        {{ form.symptoms }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold">Diagnosis</label>
+                        {{ form.diagnosis }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold">Medications</label>
+                        {{ form.medication }}
+                        <small class="text-muted">Include dosage and frequency.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="fw-bold">Advice / Notes</label>
+                        {{ form.notes }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Save & Complete Appointment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <h2>👋 Hello, {{ user.first_name|default:user.username }}</h2>
+      <p class="text-muted">
+        Role: <span class="badge bg-info text-dark">{{ user.user_type|title }}</span>
+      </p>
+    </div>
+  </div>
+
+  {% if user.user_type == 'patient' %}
+    <div class="row mb-4">
+      <div class="col-md-12">
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary ...">➕ Book New Appointment</a>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="card shadow">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">📅 Your Appointments</h5>
+      <span class="badge bg-secondary">{{ appointments.count }} Total</span>
+    </div>
+    <div class="card-body p-0">
+      {% if appointments %}
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              {% if user.user_type == 'patient' %}
+                <th>Doctor</th>
+              {% else %}
+                <th>Patient</th>
+              {% endif %}
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for appt in appointments %}
+              <tr>
+                <td>{{ appt.date }}</td>
+                <td>{{ appt.time }}</td>
+                <td>
+                  {% if user.user_type == 'patient' %}
+                    Dr. {{ appt.doctor.user.last_name }}
+                  {% else %}
+                    {{ appt.patient.user.first_name }} {{ appt.patient.user.last_name }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if appt.status == 'pending' %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  {% elif appt.status == 'confirmed' %}
+                    <span class="badge bg-success">Confirmed</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{{ appt.status }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if user.user_type == 'doctor' %}
+                    {% if appt.status == 'pending' %}
+                      <a href="{% url 'update_status' appt.id 'confirmed' %}" class="btn btn-sm btn-success">✔ Accept</a>
+                      <a href="{% url 'update_status' appt.id 'cancelled' %}" class="btn btn-sm btn-danger">✖ Reject</a>
+                    {% elif appt.status == 'confirmed' %}
+                      <a href="{% url 'add_prescription' appt.id %}" class="btn btn-sm btn-info">💊 Prescribe</a>
+                    {% elif appt.status == 'completed' %}
+                      {% if appt.has_invoice %}
+                        <span class="badge bg-secondary">Billed</span>
+                      {% else %}
+                        <a href="{% url 'generate_invoice' appt.id %}" class="btn btn-sm btn-warning">💰 Bill</a>
+                      {% endif %}
+                    {% endif %}
+                  {% else %}
+                    {% if appt.status == 'completed' %}
+                      <a href="{% url 'view_prescription' appt.id %}" class="btn btn-sm btn-info">Rx</a>
+
+                      {% if appt.has_invoice %}
+                        {% if appt.invoice.paid %}
+                          <span class="badge bg-success">Paid</span>
+                        {% else %}
+                          <a href="{% url 'pay_invoice' appt.invoice.id %}" class="btn btn-sm btn-danger">Pay Ksh {{ appt.invoice.total_amount }}</a>
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="p-5 text-center text-muted">
+          <h4>No appointments found.</h4>
+          <p>You are free for now!</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

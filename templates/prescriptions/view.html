@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow border-success">
+            <div class="card-header bg-success text-white d-flex justify-content-between">
+                <h4 class="mb-0">📄 Medical Prescription</h4>
+                <span>Date: {{ rx.issued_at|date:"M d, Y" }}</span>
+            </div>
+            <div class="card-body">
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>👨‍⚕️ Doctor</h5>
+                        <p class="lead">Dr. {{ rx.appointment.doctor.user.last_name }}</p>
+                        <small class="text-muted">{{ rx.appointment.doctor.specialization }}</small>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <h5>🤒 Patient</h5>
+                        <p class="lead">{{ rx.appointment.patient.user.first_name }} {{ rx.appointment.patient.user.last_name }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold">Diagnosis</h6>
+                    <p class="fs-5">{{ rx.diagnosis }}</p>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold">Medication (Rx)</h6>
+                    <div class="p-3 bg-light border rounded">
+                        <pre style="font-family: inherit; margin: 0;">{{ rx.medication }}</pre>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold">Doctor's Notes</h6>
+                    <p>{{ rx.notes }}</p>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button onclick="window.print()" class="btn btn-outline-dark">🖨 Print / Save PDF</button>
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

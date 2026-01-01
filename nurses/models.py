@@ -1,12 +1,12 @@
 from django.db import models
-
+from django.conf import settings
 # Create your models here.
 from django.contrib.auth.models import User
 
 class Nurse(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    qualifications = models.TextField()
     phone = models.CharField(max_length=15)
-    qualification = models.CharField(max_length=100)
     experience_years = models.IntegerField()
 
     def __str__(self):
@@ -41,7 +41,7 @@ class NurseAssignment(models.Model):
         return f"{self.nurse} → {self.patient}"
     
 
-    
+
 class VitalSigns(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     nurse = models.ForeignKey(Nurse, on_delete=models.SET_NULL, null=True)
