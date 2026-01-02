@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h4>🧪 Enter Lab Results</h4>
+        </div>
+        <div class="card-body">
+            <h5>Test: {{ lab_req.test.name }}</h5>
+            <p>Patient: {{ lab_req.patient.user.first_name }}</p>
+            <hr>
+            <form method="POST">
+                {% csrf_token %}
+                <label class="form-label">Findings / Result:</label>
+                {{ form.result }}
+                
+                <label class="form-label mt-3">Update Status:</label>
+                {{ form.status }}
+                
+                <button type="submit" class="btn btn-success mt-4">Save & Complete</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

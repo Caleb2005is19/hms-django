@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h4>🔬 Order Lab Test</h4>
+            </div>
+            <div class="card-body">
+                <p>Patient: <strong>{{ patient.user.first_name }} {{ patient.user.last_name }}</strong></p>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-info w-100">Send to Lab</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

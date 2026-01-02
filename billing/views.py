@@ -49,3 +49,30 @@ from .models import Invoice
 def view_invoice(request, invoice_id):
     invoice = get_object_or_404(Invoice, id=invoice_id)
     return render(request, 'billing/invoice_detail.html', {'invoice': invoice})
+
+# billing/views.py
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Invoice
+
+@login_required
+def cashier_dashboard(request):
+    # Get all unpaid invoices (Newest first)
+    pending_invoices = Invoice.objects.filter(paid=False).order_by('-issued_at')
+    return render(request, 'billing/cashier_dashboard.html', {'invoices': pending_invoices})
+
+@login_required
+def process_payment(request, invoice_id):
+    invoice = get_object_or_404(Invoice, id=invoice_id)
+    
+    if request.method == 'POST':
+        # Mark as Paid
+        invoice.paid = True
+        invoice.save()
+        
+        # In a real system, you might record "Payment Method" (Cash/M-Pesa) here
+        # For now, we just mark it as cleared.
+        
+        return redirect('view_invoice', invoice_id=invoice.id) # Show the Receipt
+
+    return render(request, 'billing/process_payment.html', {'invoice': invoice})

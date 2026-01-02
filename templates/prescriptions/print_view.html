@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    
+    <div class="text-center mb-4">
+        <div class="print-only">
+            <h1>🏥 ST. LUKE'S HOSPITAL</h1>
+            <p>P.O. Box 123, Nairobi | Phone: 0700-000-000</p>
+            <hr>
+        </div>
+        <h3>💊 MEDICAL PRESCRIPTION</h3>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="row mb-4 border-bottom pb-3">
+                <div class="col-6">
+                    <h5>Patient Details</h5>
+                    <p class="mb-0"><strong>Name:</strong> {{ prescription.appointment.patient.user.first_name }} {{ prescription.appointment.patient.user.last_name }}</p>
+                    <p><strong>Date:</strong> {{ prescription.created_at|date:"d M Y" }}</p>
+                </div>
+                <div class="col-6 text-end">
+                    <h5>Doctor Details</h5>
+                    <p class="mb-0"><strong>Dr.</strong> {{ prescription.appointment.doctor.user.last_name }}</p>
+                    <p class="text-muted">General Practitioner</p>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <h4 class="text-primary no-print">Rx</h4>
+                <h1 class="print-only" style="font-family: serif; font-style: italic;">Rx</h1>
+                
+                <div class="p-3 bg-light border rounded">
+                    <p style="white-space: pre-line; font-size: 1.2rem;">{{ prescription.medication }}</p>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <h5>Instructions / Dosage:</h5>
+                <p class="fst-italic">{{ prescription.instructions }}</p>
+            </div>
+
+            <div class="row mt-5 pt-5 print-only">
+                <div class="col-6">
+                    <hr>
+                    <p>Doctor's Signature & Stamp</p>
+                </div>
+            </div>
+
+            <div class="text-center no-print mt-4">
+                <button onclick="window.print()" class="btn btn-primary btn-lg">🖨️ Print Prescription</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-lg">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

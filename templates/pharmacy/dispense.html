@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4>Dispense Medication</h4>
+            </div>
+            <div class="card-body">
+                <h5>Doctor's Note:</h5>
+                <div class="alert alert-secondary">
+                    {{ prescription.medication }}
+                    <hr>
+                    <small>{{ prescription.instructions }}</small>
+                </div>
+
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Select Drug from Inventory</label>
+                        <select name="drug" class="form-select" required>
+                            <option value="">-- Choose Drug --</option>
+                            {% for drug in drugs %}
+                            <option value="{{ drug.id }}">
+                                {{ drug.name }} (Stock: {{ drug.stock_quantity }} | Ksh {{ drug.price }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Quantity to Dispense</label>
+                        <input type="number" name="quantity" class="form-control" value="1" min="1" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Confirm & Add to Bill</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

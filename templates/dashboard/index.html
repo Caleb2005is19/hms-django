@@ -13,7 +13,7 @@
   {% if user.user_type == 'patient' %}
     <div class="row mb-4">
       <div class="col-md-12">
-        <a href="{% url 'book_appointment' %}" class="btn btn-primary ...">➕ Book New Appointment</a>
+        <a href="{% url 'book_appointment' %}" class="btn btn-primary">➕ Book New Appointment</a>
       </div>
     </div>
   {% endif %}
@@ -60,15 +60,27 @@
                     <span class="badge bg-secondary">{{ appt.status }}</span>
                   {% endif %}
                 </td>
+
                 <td>
                   {% if user.user_type == 'doctor' %}
                     {% if appt.status == 'pending' %}
                       <a href="{% url 'update_status' appt.id 'confirmed' %}" class="btn btn-sm btn-success">✔ Accept</a>
                       <a href="{% url 'update_status' appt.id 'cancelled' %}" class="btn btn-sm btn-danger">✖ Reject</a>
                     {% elif appt.status == 'confirmed' %}
-                      <a href="{% url 'add_prescription' appt.id %}" class="btn btn-sm btn-info">💊 Prescribe</a>
+                      {% if appt.prescription %}
+                        <a href="{% url 'print_prescription' appt.prescription.id %}" class="btn btn-sm btn-success">🖨️ Print Rx</a>
+                      {% else %}
+                        <a href="{% url 'add_prescription' appt.id %}" class="btn btn-sm btn-info">💊 Prescribe</a>
+                      {% endif %}
+
                       <a href="{% url 'admit_patient' appt.patient.id %}" class="btn btn-sm btn-outline-danger">🏥 Admit</a>
+                      <a href="{% url 'order_test' appt.patient.id %}" class="btn btn-sm btn-warning">🔬 Order Lab</a>
+                      <a href="{% url 'patient_timeline' appt.patient.id %}" class="btn btn-sm btn-outline-dark">🕒 History</a>
                     {% elif appt.status == 'completed' %}
+                      {% if appt.prescription %}
+                        <a href="{% url 'print_prescription' appt.prescription.id %}" class="btn btn-sm btn-success">🖨️ Print Rx</a>
+                      {% endif %}
+
                       {% if appt.has_invoice %}
                         <span class="badge bg-secondary">Billed</span>
                       {% else %}
@@ -78,7 +90,6 @@
                   {% else %}
                     {% if appt.status == 'completed' %}
                       <a href="{% url 'view_prescription' appt.id %}" class="btn btn-sm btn-info">Rx</a>
-
                       {% if appt.has_invoice %}
                         {% if appt.invoice.paid %}
                           <span class="badge bg-success">Paid</span>

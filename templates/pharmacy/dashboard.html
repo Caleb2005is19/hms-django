@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>💊 Pharmacy Dashboard</h2>
+    <div class="card shadow mt-3">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Pending Prescriptions</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor's Note</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in prescriptions %}
+                    <tr>
+                        <td>{{ p.appointment.patient.user.first_name }}</td>
+                        <td>{{ p.medication|truncatewords:5 }}</td>
+                        <td>{{ p.created_at|date:"M d" }}</td>
+                        <td>
+                            <a href="{% url 'dispense_prescription' p.id %}" class="btn btn-sm btn-primary">Dispense</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4">No pending prescriptions.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

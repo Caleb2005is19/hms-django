@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>🔬 Laboratory Dashboard</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Test Required</th>
+                <th>Ordered By</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in tests %}
+            <tr>
+                <td>{{ req.patient.user.first_name }}</td>
+                <td>{{ req.test.name }}</td>
+                <td>Dr. {{ req.doctor.user.last_name }}</td>
+                <td>
+                    <span class="badge {% if req.status == 'Pending' %}bg-warning{% else %}bg-primary{% endif %}">
+                        {{ req.status }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'process_test' req.id %}" class="btn btn-sm btn-success">Enter Result</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No pending lab requests.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -27,6 +27,49 @@
       .content {
         padding: 20px;
       }
+      /* Default: Hide the print header on the screen */
+      .print-only {
+        display: none;
+      }
+      
+      /* The Magic: Rules that only apply when printing */
+      @media print {
+        /* Hide web navigation */
+        .navbar,
+        .sidebar,
+        .btn,
+        .no-print,
+        footer {
+          display: none !important;
+        }
+      
+        /* Make sure the main content takes full width */
+        .container,
+        .col-md-6,
+        .col-md-8 {
+          width: 100% !important;
+          max-width: 100% !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          box-shadow: none !important; /* Remove card shadows */
+          border: none !important; /* Remove card borders */
+        }
+      
+        /* Show the Letterhead */
+        .print-only {
+          display: block !important;
+          text-align: center;
+          margin-bottom: 20px;
+          border-bottom: 2px solid #000;
+          padding-bottom: 10px;
+        }
+      
+        /* Ensure text is black for sharp printing */
+        body {
+          color: #000;
+          background: white;
+        }
+      }
     </style>
   </head>
   <body>
@@ -42,6 +85,26 @@
         {% if user.user_type == 'nurse' %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'triage_queue' %}">🩺 Triage Queue</a>
+          </li>
+        {% endif %}
+        {% if user.user_type == 'pharmacist' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'pharmacy_dashboard' %}">💊 Pharmacy</a>
+          </li>
+        {% endif %}
+        {% if user.user_type == 'lab_tech' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lab_dashboard' %}">🔬 Lab</a>
+          </li>
+        {% endif %}
+        {% if user.user_type == 'cashier' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'cashier_dashboard' %}">💰 Cashier</a>
+          </li>
+        {% endif %}
+        {% if user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link fw-bold text-danger" href="{% url 'admin_analytics' %}">📊 Director</a>
           </li>
         {% endif %}
         <hr />

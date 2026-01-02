@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-info text-white">
+          <h4 class="mb-0">💊 Write Prescription</h4>
+          <small>Patient: {{ appointment.patient.user.first_name }} {{ appointment.patient.user.last_name }}</small>
+        </div>
+
+        <div class="card-body">
+          {% if appointment.vitals %}
+            <div class="card mb-4 border-info">
+              <div class="card-header bg-light text-info">
+                <h6 class="mb-0">🩺 Latest Vitals (Reference)</h6>
+              </div>
+              <div class="card-body bg-light">
+                <div class="row text-center">
+                  <div class="col-3">
+                    <small class="text-muted">BP</small>
+                    <h5 class="fw-bold">{{ appointment.vitals.blood_pressure }}</h5>
+                  </div>
+                  <div class="col-3">
+                    <small class="text-muted">Pulse</small>
+                    <h5 class="fw-bold">{{ appointment.vitals.pulse_rate }}</h5>
+                  </div>
+                  <div class="col-3">
+                    <small class="text-muted">Temp</small>
+                    <h5 class="fw-bold">{{ appointment.vitals.temperature }}°C</h5>
+                  </div>
+                  <div class="col-3">
+                    <small class="text-muted">Weight</small>
+                    <h5 class="fw-bold">{{ appointment.vitals.weight }}kg</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="alert alert-warning">⚠️ No vitals recorded for this appointment.</div>
+          {% endif %}
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="fw-bold form-label">Medication & Dosage</label>
+              {{ form.medication }}
+              <small class="text-muted">e.g., Amoxicillin 500mg (2 tabs), Paracetamol 1g</small>
+            </div>
+
+            <div class="mb-3">
+              <label class="fw-bold form-label">Instructions</label>
+              {{ form.instructions }}
+              <small class="text-muted">e.g., Take after meals for 5 days.</small>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn btn-success btn-lg">✅ Save & Complete Appointment</button>
+              <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <style>
+    /* Timeline CSS */
+    .timeline {
+      position: relative;
+      padding: 20px 0;
+      list-style: none;
+    }
+    .timeline:before {
+      content: ' ';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50px;
+      width: 3px;
+      background-color: #e9ecef;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 30px;
+    }
+    .timeline-icon {
+      position: absolute;
+      left: 25px;
+      top: 0;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 50px;
+      color: white;
+      z-index: 1;
+    }
+    .timeline-content {
+      margin-left: 90px;
+    }
+  </style>
+
+  <div class="container mt-4">
+    <div class="card shadow">
+      <div class="card-header bg-dark text-white d-flex justify-content-between">
+        <h4 class="mb-0">🕒 Patient Care Timeline</h4>
+        <span>{{ patient.user.first_name }} {{ patient.user.last_name }} (ID: P-{{ patient.id }})</span>
+      </div>
+      <div class="card-body">
+        <ul class="timeline">
+          {% for event in timeline %}
+            <li class="timeline-item">
+              {% if event.event_type == 'Vitals' %}
+                <div class="timeline-icon bg-warning">🩺</div>
+              {% elif event.event_type == 'Lab' %}
+                <div class="timeline-icon bg-info">🔬</div>
+              {% elif event.event_type == 'Prescription' %}
+                <div class="timeline-icon bg-success">💊</div>
+              {% elif event.event_type == 'Admission' %}
+                <div class="timeline-icon bg-danger">🏥</div>
+              {% else %}
+                <div class="timeline-icon bg-secondary">📅</div>
+              {% endif %}
+
+              <div class="timeline-content card shadow-sm">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <h5 class="card-title fw-bold">{{ event.event_type }}</h5>
+                    <small class="text-muted">{{ event.timeline_date|date:'M d, Y H:i' }}</small>
+                  </div>
+
+                  {% if event.event_type == 'Vitals' %}
+                    <p class="mb-0">
+                      <strong>BP:</strong> {{ event.blood_pressure }} |
+                      <strong>Temp:</strong> {{ event.temperature }}°C |
+                      <strong>Pulse:</strong> {{ event.pulse_rate }}
+                    </p>
+                    <small class="text-muted">Recorded by Nurse {{ event.recorded_by.user.last_name }}</small>
+                  {% elif event.event_type == 'Lab' %}
+                    <p>
+                      <strong>Test:</strong> {{ event.test.name }}
+                    </p>
+                    {% if event.status == 'Completed' %}
+                      <div class="alert alert-light border p-2 mb-0">
+                        <strong>Result:</strong> {{ event.result }}
+                      </div>
+                    {% else %}
+                      <span class="badge bg-warning text-dark">Pending Result</span>
+                    {% endif %}
+                  {% elif event.event_type == 'Prescription' %}
+                    <p class="mb-0">{{ event.medication }}</p>
+                    <small class="fst-italic text-muted">"{{ event.instructions }}"</small>
+                    {% if event.is_dispensed %}
+                      <span class="badge bg-success">Dispensed</span>
+                    {% else %}
+                      <span class="badge bg-danger">Not Collected</span>
+                    {% endif %}
+                  {% elif event.event_type == 'Admission' %}
+                    <p>
+                      Admitted to <strong>{{ event.bed.ward.name }}</strong> (Bed {{ event.bed.bed_number }})
+                    </p>
+                    {% if event.is_discharged %}
+                      <small>Discharged on {{ event.discharge_date|date:'M d' }}</small>
+                    {% else %}
+                      <span class="badge bg-danger">Currently Admitted</span>
+                    {% endif %}
+                  {% elif event.event_type == 'Appointment' %}
+                    <p>Consultation with Dr. {{ event.doctor.user.last_name }}</p>
+                    <span class="badge bg-secondary">{{ event.status }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+          {% empty %}
+            <li class="text-center text-muted">No medical history found for this patient.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="text-center mt-5 mb-5">
+      <button onclick="history.back()" class="btn btn-secondary btn-lg">⬅ Back to Previous Page</button>
+    </div>
+  </div>
+{% endblock %}

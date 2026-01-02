@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">📊 Hospital Director's Overview</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card text-white bg-success shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title">💰 Total Revenue (All Time)</h5>
+                    <h2 class="display-4 fw-bold">Ksh {{ total_revenue }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-white bg-primary shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title">📅 Today's Income</h5>
+                    <h2 class="display-4 fw-bold">Ksh {{ today_revenue }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card border-info shadow-sm">
+                <div class="card-body text-center">
+                    <h1 class="text-info">{{ total_patients }}</h1>
+                    <small class="text-muted">Registered Patients</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-warning shadow-sm">
+                <div class="card-body text-center">
+                    <h1 class="text-warning">{{ today_appointments }}</h1>
+                    <small class="text-muted">Appointments Today</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-danger shadow-sm">
+                <div class="card-body text-center">
+                    <h1 class="text-danger">{{ occupied_beds }}</h1>
+                    <small class="text-muted">Patients in Wards</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-dark shadow-sm">
+                <div class="card-body text-center">
+                    <h1 class="text-dark">{{ low_stock_drugs }}</h1>
+                    <small class="text-muted">Low Stock Alerts ⚠️</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4>Quick Actions</h4>
+            <a href="{% url 'manage_staff' %}" class="btn btn-outline-dark">👥 Manage Staff</a>
+            <a href="{% url 'pharmacy_dashboard' %}" class="btn btn-outline-primary">💊 Pharmacy View</a>
+            <a href="{% url 'ward_dashboard' %}" class="btn btn-outline-danger">🏥 Ward View</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

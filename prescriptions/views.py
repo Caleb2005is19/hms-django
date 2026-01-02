@@ -7,31 +7,25 @@ from .forms import PrescriptionForm
 
 @login_required
 def add_prescription(request, appointment_id):
-    # 1. Get the appointment
     appointment = get_object_or_404(Appointment, id=appointment_id)
-
-    # 2. Security: Only the assigned doctor can write this
-    if request.user.user_type != 'doctor' or appointment.doctor.user != request.user:
-        messages.error(request, "You are not authorized to prescribe for this patient.")
-        return redirect('dashboard')
-
+    
     if request.method == 'POST':
         form = PrescriptionForm(request.POST)
         if form.is_valid():
             prescription = form.save(commit=False)
-            prescription.appointment = appointment  # Link it!
+            prescription.appointment = appointment
             prescription.save()
             
-            # Auto-complete the appointment status
+            # 👇 ADD THESE TWO LINES 👇
             appointment.status = 'completed'
             appointment.save()
+            # 👆 THIS MARKS IT AS DONE 👆
             
-            messages.success(request, "Prescription saved successfully!")
             return redirect('dashboard')
     else:
         form = PrescriptionForm()
-
-    return render(request, 'prescriptions/add.html', {'form': form, 'appt': appointment})
+    
+    return render(request, 'prescriptions/add_prescription.html', {'form': form, 'appointment': appointment})
 
 # prescriptions/views.py
 from .models import Prescription  # Ensure Prescription is imported
@@ -48,3 +42,12 @@ def view_prescription(request, appointment_id):
         return redirect('dashboard')
 
     return render(request, 'prescriptions/view.html', {'rx': prescription})
+
+
+# prescriptions/views.py
+from django.shortcuts import render, get_object_or_404
+from .models import Prescription
+
+def print_prescription(request, prescription_id):
+    prescription = get_object_or_404(Prescription, id=prescription_id)
+    return render(request, 'prescriptions/print_view.html', {'prescription': prescription})

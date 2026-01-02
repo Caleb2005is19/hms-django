@@ -8,6 +8,9 @@ class CustomUser(AbstractUser):
         ('doctor', 'Doctor'),
         ('nurse', 'Nurse'),
         ('patient', 'Patient'),
+        ('pharmacist', 'Pharmacist'),
+        ('lab_tech', 'Lab Technician'),
+        ('cashier', 'Cashier'),
     )
     
     # DO YOU HAVE THIS LINE BELOW? 👇
