@@ -12,6 +12,7 @@ from laboratory.models import LabRequest
 from prescriptions.models import Prescription
 from wards.models import Admission
 from django.core.exceptions import PermissionDenied
+from laboratory.models import LabRequest
 
 @login_required
 def patient_timeline(request, patient_id):
@@ -29,6 +30,8 @@ def patient_timeline(request, patient_id):
     labs = LabRequest.objects.filter(patient=patient)
     prescriptions = Prescription.objects.filter(appointment__patient=patient)
     admissions = Admission.objects.filter(patient=patient)
+    
+    labs = LabRequest.objects.filter(patient=patient, status='Completed').order_by('-requested_at')
 
     # 2. Tag them so the template knows what they are
     # We also normalize the "date" field for sorting
@@ -64,3 +67,10 @@ def patient_timeline(request, patient_id):
         'patient': patient,
         'timeline': timeline_events
     })
+    
+    
+# Inside patient_timeline view
+from laboratory.models import LabRequest
+# ...
+
+# Add 'labs': labs to your context dictionary

@@ -65,3 +65,11 @@ def process_test(request, request_id):
         form = LabResultForm(instance=lab_req)
     
     return render(request, 'laboratory/process_test.html', {'form': form, 'lab_req': lab_req})
+
+# labs/views.py
+from django.shortcuts import render, get_object_or_404
+from .models import LabRequest
+
+def print_lab_result(request, lab_id):
+    lab_request = get_object_or_404(LabRequest, id=lab_id)
+    return render(request, 'labs/print_result.html', {'lab': lab_request})

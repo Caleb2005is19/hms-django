@@ -113,6 +113,32 @@
             <li class="text-center text-muted">No medical history found for this patient.</li>
           {% endfor %}
         </ul>
+        <div class="card mt-4 shadow">
+          <div class="card-header bg-warning text-dark">
+            <h4>🔬 Lab Reports</h4>
+          </div>
+          <div class="card-body">
+            {% if labs %}
+              <ul class="list-group">
+                {% for lab in labs %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>{{ lab.test_name }}</strong>
+                      <br />
+                      <small class="text-muted">{{ lab.created_at|date:'d M Y' }}</small>
+                    </div>
+                    <div>
+                      <span class="badge bg-success">Result Ready</span>
+                      <a href="{% url 'print_lab_result' lab.id %}" class="btn btn-sm btn-outline-dark ms-2">🖨️ View Report</a>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="text-muted">No lab tests found.</p>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </div>
     <div class="text-center mt-5 mb-5">

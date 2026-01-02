@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    
+    <div class="print-only text-center mb-4">
+        <h1>🏥 ST. LUKE'S HOSPITAL</h1>
+        <p>LABORATORY SERVICES DEPARTMENT</p>
+        <p>P.O. Box 123, Nairobi | Phone: 0700-000-000</p>
+        <hr border="2">
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="row mb-4 border-bottom pb-3">
+                <div class="col-6">
+                    <h5 class="text-muted">Patient Details</h5>
+                    <p class="mb-0 fw-bold fs-5">{{ lab.patient.user.first_name }} {{ lab.patient.user.last_name }}</p>
+                    <p class="mb-0">ID: P-{{ lab.patient.id }}</p>
+                    <p>Age/DOB: {{ lab.patient.date_of_birth }}</p>
+                </div>
+                <div class="col-6 text-end">
+                    <h5 class="text-muted">Report Details</h5>
+                    <p class="mb-0"><strong>Test Name:</strong> {{ lab.test_name }}</p>
+                    <p class="mb-0"><strong>Lab Ref:</strong> #LAB-{{ lab.id }}</p>
+                    <p><strong>Date:</strong> {{ lab.created_at|date:"d M Y, H:i" }}</p>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4 class="text-center mb-4 text-uppercase text-decoration-underline">Laboratory Result</h4>
+                
+                <table class="table table-bordered">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>Test Parameter</th>
+                            <th>Result</th>
+                            <th>Reference Range</th> <th>Flag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">{{ lab.test_name }}</td>
+                            <td class="text-center fs-5">{{ lab.result }}</td>
+                            <td class="text-center text-muted"> - </td>
+                            <td class="text-center">
+                                {% if "High" in lab.result or "high" in lab.result %}
+                                    <span class="badge bg-danger print-no-bg">HIGH ⚠️</span>
+                                {% elif "Low" in lab.result or "low" in lab.result %}
+                                    <span class="badge bg-warning text-dark print-no-bg">LOW ⚠️</span>
+                                {% else %}
+                                    <span class="text-success">Normal</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="mt-4 p-3 bg-light border rounded">
+                    <strong>📝 Pathologist / Doctor's Comments:</strong>
+                    <p class="mt-2 fst-italic">{{ lab.doctor.user.last_name }}: "Clinical correlation required."</p>
+                </div>
+            </div>
+
+            <div class="row mt-5 pt-5 print-only">
+                <div class="col-6 text-center">
+                    <hr style="width: 80%; margin: auto;">
+                    <p>Lab Technician</p>
+                </div>
+                <div class="col-6 text-center">
+                    <hr style="width: 80%; margin: auto;">
+                    <p>Pathologist Sign & Stamp</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-5 no-print">
+                <button onclick="window.print()" class="btn btn-primary btn-lg">🖨️ Print Result</button>
+                <a href="javascript:history.back()" class="btn btn-secondary btn-lg">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        .print-no-bg {
+            background: none !important;
+            color: black !important;
+            border: 1px solid black;
+        }
+    }
+</style>
+{% endblock %}

@@ -48,6 +48,7 @@ urlpatterns = [
     path('director/staff/add/', main_views.add_staff, name='add_staff'),
     path('prescription/print/<int:prescription_id>/', rx_views.print_prescription, name='print_prescription'),
     path('search/', main_views.global_search, name='global_search'),
+    path('lab/print/<int:lab_id>/', lab_views.print_lab_result, name='print_lab_result'),
     
 
 
