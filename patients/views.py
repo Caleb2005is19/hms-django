@@ -11,11 +11,18 @@ from nurses.models import Vitals
 from laboratory.models import LabRequest
 from prescriptions.models import Prescription
 from wards.models import Admission
+from django.core.exceptions import PermissionDenied
 
 @login_required
 def patient_timeline(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
 
+    # 🔒 SECURITY CHECK 🔒
+    if request.user.user_type == 'patient':
+        # ERROR WAS HERE: Change 'patient_profile' to 'patient'
+        # hasattr check is a safety habit in case a user has no patient record attached
+        if not hasattr(request.user, 'patient') or request.user.patient != patient:
+            raise PermissionDenied("You are not authorized to view this medical record.")
     # 1. Fetch all records for this patient
     appointments = Appointment.objects.filter(patient=patient)
     vitals = Vitals.objects.filter(appointment__patient=patient) # Vitals are linked via Appointment

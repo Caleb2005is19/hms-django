@@ -8,6 +8,14 @@ from patients.models import Patient
 from billing.models import Invoice
 from pharmacy.models import Drug
 from wards.models import Bed
+# hms/views.py
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import user_passes_test, login_required  # <--- UPDATE THIS LINE
+from django.db.models import Sum, Q
+from django.utils import timezone
+
+# ... rest of your code ...
 
 # Check if user is Superuser
 def is_admin(user):
@@ -64,3 +72,47 @@ def add_staff(request):
         form = StaffRegistrationForm()
     
     return render(request, 'director/add_staff.html', {'form': form})
+
+
+# hms/views.py
+from django.db.models import Q
+from patients.models import Patient
+from accounts.models import CustomUser
+from billing.models import Invoice
+
+# ... existing imports ...
+
+@login_required
+def global_search(request):
+    query = request.GET.get('q')
+    
+    if not query:
+        return redirect('dashboard')
+
+    # 1. Search Patients (First Name, Last Name, or ID)
+    patients = Patient.objects.filter(
+        Q(user__first_name__icontains=query) | 
+        Q(user__last_name__icontains=query) |
+        Q(id__icontains=query)
+    )
+
+    # 2. Search Staff/Doctors (Username or Name)
+    staff = CustomUser.objects.filter(
+        Q(username__icontains=query) |
+        Q(first_name__icontains=query) |
+        Q(last_name__icontains=query)
+    ).exclude(user_type='patient')
+
+    # 3. Search Invoices (ID)
+    # Check if query is a number before searching ID fields
+    invoices = []
+    if query.isdigit():
+        invoices = Invoice.objects.filter(id=query)
+
+    context = {
+        'query': query,
+        'patients': patients,
+        'staff': staff,
+        'invoices': invoices,
+    }
+    return render(request, 'search_results.html', context)

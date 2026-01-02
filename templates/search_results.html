@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>🔍 Search Results for: <em>"{{ query }}"</em></h3>
+    <hr>
+
+    {% if patients %}
+    <h5 class="text-primary mt-4">Patients Found ({{ patients.count }})</h5>
+    <div class="list-group">
+        {% for p in patients %}
+        <a href="{% url 'patient_timeline' p.id %}" class="list-group-item list-group-item-action">
+            <strong>{{ p.user.first_name }} {{ p.user.last_name }}</strong> (ID: P-{{ p.id }})
+            <span class="text-muted small">- DOB: {{ p.date_of_birth }}</span>
+            <button class="btn btn-sm btn-outline-primary float-end">View History</button>
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if staff %}
+    <h5 class="text-info mt-4">Staff Found ({{ staff.count }})</h5>
+    <ul class="list-group">
+        {% for s in staff %}
+        <li class="list-group-item">
+            <strong>{{ s.first_name }} {{ s.last_name }}</strong> - 
+            <span class="badge bg-secondary">{{ s.user_type|title }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if invoices %}
+    <h5 class="text-success mt-4">Invoices Found ({{ invoices.count }})</h5>
+    <div class="list-group">
+        {% for inv in invoices %}
+        <a href="{% url 'view_invoice' inv.id %}" class="list-group-item list-group-item-action">
+            <strong>Invoice #{{ inv.id }}</strong> - Ksh {{ inv.total_amount }}
+            {% if inv.paid %}
+                <span class="badge bg-success float-end">PAID</span>
+            {% else %}
+                <span class="badge bg-danger float-end">UNPAID</span>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if not patients and not staff and not invoices %}
+    <div class="alert alert-warning mt-4">
+        No results found for "<strong>{{ query }}</strong>". Try checking the spelling.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

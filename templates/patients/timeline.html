@@ -116,7 +116,13 @@
       </div>
     </div>
     <div class="text-center mt-5 mb-5">
-      <button onclick="history.back()" class="btn btn-secondary btn-lg">⬅ Back to Previous Page</button>
+      {% if user.user_type == 'nurse' %}
+        <a href="{% url 'triage_queue' %}" class="btn btn-secondary btn-lg">⬅ Back to Triage</a>
+      {% elif user.user_type == 'patient' %}
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-lg">⬅ Back to My Dashboard</a>
+      {% else %}
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-lg">⬅ Back to Dashboard</a>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

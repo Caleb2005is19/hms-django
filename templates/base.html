@@ -123,6 +123,11 @@
       <div class="flex-grow-1">
         <nav class="navbar navbar-light bg-white shadow-sm mb-4 px-4">
           <span class="navbar-brand mb-0 h1">Hospital Management System</span>
+
+          <form class="d-flex mx-auto" action="{% url 'global_search' %}" method="GET" style="width: 40%;">
+            <input class="form-control me-2" type="search" name="q" placeholder="Search patients, doctors, invoices..." aria-label="Search" required />
+            <button class="btn btn-outline-light" type="submit">🔍</button>
+          </form>
         </nav>
 
         <div class="container content">
