@@ -67,6 +67,7 @@
                       <a href="{% url 'update_status' appt.id 'cancelled' %}" class="btn btn-sm btn-danger">✖ Reject</a>
                     {% elif appt.status == 'confirmed' %}
                       <a href="{% url 'add_prescription' appt.id %}" class="btn btn-sm btn-info">💊 Prescribe</a>
+                      <a href="{% url 'admit_patient' appt.patient.id %}" class="btn btn-sm btn-outline-danger">🏥 Admit</a>
                     {% elif appt.status == 'completed' %}
                       {% if appt.has_invoice %}
                         <span class="badge bg-secondary">Billed</span>

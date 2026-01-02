@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>🩺 Nurse Triage Station</h2>
+        <span class="badge bg-primary fs-6">Queue: {{ queue.count }} Patients</span>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            {% if queue %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Patient Name</th>
+                                <th>Doctor Assigned</th>
+                                <th>Appointment Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in queue %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="fw-bold">
+                                    {{ appt.patient.user.first_name }} {{ appt.patient.user.last_name }}
+                                </td>
+                                <td>Dr. {{ appt.doctor.user.last_name }}</td>
+                                <td>
+                                    <span class="badge bg-info text-dark">{{ appt.time }}</span>
+                                    <small class="text-muted d-block">{{ appt.date }}</small>
+                                </td>
+                                <td>
+                                    <a href="{% url 'record_triage' appt.id %}" class="btn btn-sm btn-warning">
+                                        📝 Record Vitals
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center p-5">
+                    <h4 class="text-muted">No patients waiting for triage.</h4>
+                    <p>Good job! The queue is empty.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

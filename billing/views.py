@@ -41,3 +41,11 @@ def pay_invoice(request, invoice_id):
     
     messages.success(request, f"Invoice #{invoice.id} paid successfully!")
     return redirect('dashboard')
+
+# billing/views.py
+from django.shortcuts import render, get_object_or_404
+from .models import Invoice
+
+def view_invoice(request, invoice_id):
+    invoice = get_object_or_404(Invoice, id=invoice_id)
+    return render(request, 'billing/invoice_detail.html', {'invoice': invoice})

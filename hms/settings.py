@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^0dk(g@g3dh@(suw6+l#sg#&2#s%!sc^o6jmc5ic+tt-=^ati_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.2.101', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'billing',
     'dashboard',
     'nurses',
+    'wards',
+    'pharmacy',
 ]
 
 MIDDLEWARE = [

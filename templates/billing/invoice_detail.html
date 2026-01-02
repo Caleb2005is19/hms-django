@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white d-flex justify-content-between">
+            <h4 class="mb-0">🧾 Invoice #{{ invoice.id }}</h4>
+            <span>{{ invoice.issued_at|date:"M d, Y" }}</span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Bill To:</h5>
+                    <p class="fs-5">{{ invoice.patient.user.first_name }} {{ invoice.patient.user.last_name }}</p>
+                    <p class="text-muted">Patient ID: P-{{ invoice.patient.id }}</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <h5>Status:</h5>
+                    {% if invoice.paid %}
+                        <span class="badge bg-success fs-5">PAID</span>
+                    {% else %}
+                        <span class="badge bg-danger fs-5">UNPAID</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Description</th>
+                        <th class="text-end">Amount (Ksh)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in invoice.items.all %}
+                    <tr>
+                        <td>{{ item.description }}</td>
+                        <td class="text-end">{{ item.cost }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="table-secondary fw-bold">
+                        <td>TOTAL PAYABLE</td>
+                        <td class="text-end">Ksh {{ invoice.total_amount }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="text-center mt-4">
+                <button onclick="window.print()" class="btn btn-outline-primary">🖨️ Print Invoice</button>
+                {% if not invoice.paid %}
+                    <a href="#" class="btn btn-success">💳 Pay Now (M-Pesa)</a>
+                {% endif %}
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

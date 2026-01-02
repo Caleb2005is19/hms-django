@@ -7,6 +7,8 @@ from dashboard import views as dashboard_views
 from appointments import views as appointment_views
 from prescriptions import views as rx_views
 from billing import views as billing_views
+from nurses import views as nurse_view
+from wards import views as ward_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,6 +23,12 @@ urlpatterns = [
     path('prescription/view/<int:appointment_id>/', rx_views.view_prescription, name='view_prescription'),
     path('billing/generate/<int:appointment_id>/', billing_views.generate_invoice, name='generate_invoice'),
     path('billing/pay/<int:invoice_id>/', billing_views.pay_invoice, name='pay_invoice'),
+    path('nurse/queue/', nurse_view.triage_queue, name='triage_queue'),
+    path('nurse/record/<int:appointment_id>/', nurse_view.record_triage, name='record_triage'),
+    path('admit/<int:patient_id>/', ward_views.admit_patient, name='admit_patient'),
+    path('wards/', ward_views.ward_dashboard, name='ward_dashboard'),
+    path('wards/discharge/<int:admission_id>/', ward_views.discharge_patient, name='discharge_patient'),
+    path('invoice/<int:invoice_id>/', billing_views.view_invoice, name='view_invoice'),
 
 
     # Dashboard

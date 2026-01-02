@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">🏥 Admit Patient to Ward</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Patient:</strong> {{ patient.user.first_name }} {{ patient.user.last_name }}<br>
+                    <strong>ID:</strong> P-{{ patient.id }}
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Select Bed</label>
+                        {{ form.bed }}
+                        <div class="form-text">Only available beds are shown.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Reason for Admission</label>
+                        {{ form.reason }}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger">Confirm Admission</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

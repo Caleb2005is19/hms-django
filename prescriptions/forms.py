@@ -5,10 +5,16 @@ from .models import Prescription
 class PrescriptionForm(forms.ModelForm):
     class Meta:
         model = Prescription
-        fields = ['symptoms', 'diagnosis', 'medication', 'notes']
+        fields = ['medication', 'instructions']
         widgets = {
-            'symptoms': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
-            'diagnosis': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
-            'medication': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
-            'notes': forms.Textarea(attrs={'rows': 2, 'class': 'form-control'}),
+            'medication': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 3, 
+                'placeholder': 'e.g. Paracetamol 500mg, Amoxicillin 250mg'
+            }),
+            'instructions': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 3, 
+                'placeholder': 'e.g. Take 2 tablets after meals for 5 days'
+            }),
         }

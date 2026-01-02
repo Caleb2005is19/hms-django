@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🏥 Ward Management</h2>
+    
+    <div class="card shadow mt-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">🛌 Currently Admitted Patients</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Ward / Bed</th>
+                        <th>Admitted On</th>
+                        <th>Admitted By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for admission in active_admissions %}
+                    <tr>
+                        <td class="fw-bold">{{ admission.patient.user.first_name }} {{ admission.patient.user.last_name }}</td>
+                        <td>
+                            <span class="badge bg-primary">{{ admission.bed.ward.name }}</span>
+                            <span class="badge bg-secondary">{{ admission.bed.bed_number }}</span>
+                        </td>
+                        <td>{{ admission.admission_date|date:"M d, Y" }}</td>
+                        <td>Dr. {{ admission.admitted_by.user.last_name }}</td>
+                        <td>
+                            <a href="{% url 'discharge_patient' admission.id %}" class="btn btn-sm btn-danger">
+                                📤 Discharge
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center p-4">All beds are empty.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

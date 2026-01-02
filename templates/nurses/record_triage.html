@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark d-flex justify-content-between">
+                <h4 class="mb-0">📋 Record Vitals & Triage</h4>
+                <span>Patient: {{ appointment.patient.user.last_name }}</span>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="alert alert-secondary mb-4">
+                        <label class="fw-bold mb-2">🚨 Triage Category</label>
+                        {{ form.triage_category }}
+                        <small class="text-muted">Assess urgency based on visual condition.</small>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Temperature (°C)</label>
+                            {{ form.temperature }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Pulse Rate (BPM)</label>
+                            {{ form.pulse_rate }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Blood Pressure</label>
+                            {{ form.blood_pressure }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Weight (kg)</label>
+                            {{ form.weight }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nurse's Notes / Observations</label>
+                        {{ form.notes }}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">💾 Save & Send to Doctor</button>
+                        <a href="{% url 'triage_queue' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
