@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+import dj_database_url
 import os
 from pathlib import Path
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-^0dk(g@g3dh@(suw6+l#sg#&2#s%!sc^o6jmc5ic+tt-=^ati_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.2.101', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -85,12 +87,20 @@ WSGI_APPLICATION = 'hms.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# hms/settings.py
+
+
+# 👇 PASTE THE NEW URL FROM STEP 1 HERE 👇
+# It should look like: postgresql://postgres.abcdef:password@aws-0-eu-central-1.pooler.supabase.com:6543/postgres
+CLOUDSQL_URL = "postgresql://postgres.fnrfkenfktoranqxqogg:LaaZ2sUpZowcAqTF@aws-1-eu-west-2.pooler.supabase.com:6543/postgres"
+
+# Ensure the password in that URL is your REAL password, not [YOUR-PASSWORD]
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(CLOUDSQL_URL)
 }
+
+
 
 
 # Password validation
@@ -128,6 +138,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# 👇 ADD THIS LINE 👇
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
