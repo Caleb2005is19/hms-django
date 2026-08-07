@@ -97,7 +97,14 @@ CLOUDSQL_URL = "postgresql://postgres.fnrfkenfktoranqxqogg:LaaZ2sUpZowcAqTF@aws-
 # Ensure the password in that URL is your REAL password, not [YOUR-PASSWORD]
 
 DATABASES = {
-    'default': dj_database_url.parse(CLOUDSQL_URL)
+    "default": {
+        "ENGINE": config("DB_ENGINE"),
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST"),
+        "PORT": config("DB_PORT"),
+    }
 }
 
 
